@@ -3,7 +3,7 @@
 #standard python packages
 import numpy as np
 import matplotlib.pyplot as plt
-import math
+import math, time
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from matplotlib.animation import FuncAnimation
 
@@ -39,9 +39,11 @@ if __name__ == '__main__':
 	savename = "plots/" + "test"	#this will be the name the plot or animation is saved as
 	dots = 100	#dots per inch for the animation
 	save_show = 2	#0 = only save plot, 1 = both save and show plot, any other number will just show the plot
+	want_time = 0	#0 for wanting to count execution time and print it in the terminal, anything else will not
 
 	##################################################
 
+	start = time.time()
 
 #	with open("text_files/Meteor_1_L3.txt") as f:
 #	with open("text_files/Elves1_128GTU.txt") as f:
@@ -106,6 +108,10 @@ if __name__ == '__main__':
 		plt.colorbar(im, cax=cax)
 		if save_show == 0 or save_show == 1:
 			fig.savefig(savename + ".eps")
+
+	end = time.time()
+	if want_time == 0:
+		print end-start
 
 	if save_show != 0:
 		plt.show()
