@@ -13,10 +13,10 @@ os.mkdir(new_dir_name)	#making of said directory within simuout
 #############################################
 #Changeable parameters
 #for now, this program is geared for changing the magnitude which means to begin with the cfg file should have the other parameters set manually to what is sought after and then run this program. to simulate for different parametres would need a little bit of tweaking, not hard though
-start = 0	#the start magnitude
-end = -5	#the end magnitude, which should always be smaller than the start
+start = -1	#the start magnitude
+end = -1	#the end magnitude, which should always be smaller than the start
 increment = 1	#how large should each step be? for example with 0.5 between 0 and -2 we would get 0,-0.5,-1,-1.5 and -2
-number_of_sim = 10	#number of simulations for each step, so for 3 between 1 and -1 with 1 as increment we would get 1,1,1,0,0,0,-1,-1,-1
+number_of_sim = 5	#number of simulations for each step, so for 3 between 1 and -1 with 1 as increment we would get 1,1,1,0,0,0,-1,-1,-1
 sim_type = 1	#0 for meteors, anything else defaults to TLE simulations
 #############################################
 
@@ -36,9 +36,19 @@ fil.write('number_of_sim: ' + str(number_of_sim) + "\n")
 fil.write('sim_type: ' + str(sim_type) + '    #This is not the same type as in the config, this is just 0 for meteors and 1 for the rest')
 fil.close()
 
+#the following is to get the list of the magnitudes to loop through
+total_number_of_sim = (((start-end)/increment)+1)*number_of_sim	#we must have +1 to include the 0 magnitude
+count = start
+list_to_change = []
+while count >= end:
+	temp_count = 0
+	while temp_count < number_of_sim:
+		list_to_change.append(count)
+		temp_count = temp_count + 1
+	count = count - increment
+list_to_change = np.asarray(list_to_change)
 
-total_number_of_sim = ((start-end)/increment)+1	#we must have +1 to include the 0 magnitude
-list_to_change = np.linspace(start,end,total_number_of_sim)	#the list of all magnitudes to change between each simulation
+
 for a in list_to_change:
 	times = 0
 	while times < number_of_sim:	#this will run the same magnitude as many times as number_of_sim is required to be
