@@ -50,36 +50,34 @@ list_to_change = np.asarray(list_to_change)
 
 
 for a in list_to_change:
-	times = 0
-	while times < number_of_sim:	#this will run the same magnitude as many times as number_of_sim is required to be
-		data = []
-		with open(filename) as f:
-			for line in f:
-				templine = line.split()
-				if len(templine) != 0:
-					if templine[0] == "TLEGenerator.absmag":
-						line = "TLEGenerator.absmag      = " + str(a) + "    			#-0.9 #abs. mag of the TLE"
-						print line
-				data.append(line.strip())
+	data = []
+	with open(filename) as f:
+		for line in f:
+			templine = line.split()
+			if len(templine) != 0:
+				if templine[0] == "TLEGenerator.absmag":
+					line = "TLEGenerator.absmag      = " + str(a) + "    			#-0.9 #abs. mag of the TLE"
+					print line
+			data.append(line.strip())
 
-		fil = open(filename, 'w')
-		for line in data:
-			fil.write(line + "\n")
-		fil.close()
+	fil = open(filename, 'w')
+	for line in data:
+		fil.write(line + "\n")
+	fil.close()
 
 
-		#below is for sending the bash command
-		if sim_type == 0:
-			bashCommand = "./simulate_EVENTS_MiniEuso config/MiniEuso_v2METEOR.cfg"
-		else:
-			bashCommand = "./simulate_EVENTS_MiniEuso config/MiniEuso_v2TLE.cfg"
-		subprocess.check_call(bashCommand, shell=True)	#as long as the command is not user inputed the shell=True is ok, otherwise shell injection = problems
+	#below is for sending the bash command
+	if sim_type == 0:
+		bashCommand = "./simulate_EVENTS_MiniEuso config/MiniEuso_v2METEOR.cfg"
+	else:
+		bashCommand = "./simulate_EVENTS_MiniEuso config/MiniEuso_v2TLE.cfg"
+	subprocess.check_call(bashCommand, shell=True)	#as long as the command is not user inputed the shell=True is ok, otherwise shell injection = problems
 
 
-		#below is for the handling of the root files created during each loop
-		list_of_files = glob.glob('output/*.root')	#this will find all root files within output where each simulation is stored
-		latest_file = max(list_of_files, key=os.path.getctime)	#this finds the latest created root file
-		os.rename(latest_file, new_dir_name + "/" + latest_file.strip("output/") + "t")	#and this moves the latest root file to the directory created in the beginning, the extra t is ugly since i don't know why but the strip("output/") removes the last t in .txt for some reason
-		times = times+1
+	#below is for the handling of the root files created during each loop
+	list_of_files = glob.glob('output/*.root')	#this will find all root files within output where each simulation is stored
+	latest_file = max(list_of_files, key=os.path.getctime)	#this finds the latest created root file
+	os.rename(latest_file, new_dir_name + "/" + latest_file.strip("output/") + "t")	#and this moves the latest root file to the directory created in the beginning, the extra t is ugly since i don't know why but the strip("output/") removes the last t in .txt for some reason
+
 
 print "SCRIPT IS DONE"	#in case everything worked as it should this will be shown
