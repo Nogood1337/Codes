@@ -77,7 +77,8 @@ for a in list_to_change:
 	#below is for the handling of the root files created during each loop
 	list_of_files = glob.glob('output/*.root')	#this will find all root files within output where each simulation is stored
 	latest_file = max(list_of_files, key=os.path.getctime)	#this finds the latest created root file
-	os.rename(latest_file, new_dir_name + "/" + latest_file.strip("output/") + "t")	#and this moves the latest root file to the directory created in the beginning, the extra t is ugly since i don't know why but the strip("output/") removes the last t in .txt for some reason
+	new_file = new_dir_name + "/" + latest_file[7:]	#this is the new pathname for the file, the 7 is because output/ is 7 characters
+	os.rename(latest_file, new_file)	#and this moves the latest root file to the directory created in the beginning
 
 
 print "SCRIPT IS DONE"	#in case everything worked as it should this will be shown
